@@ -20,7 +20,7 @@ interface SearchPageProps {
 const Dashboard = async ({ searchParams }: SearchPageProps) => {
 	// const { userId: userIdAuth } = auth();
 	// let userId = "659804040fd75fd95096cb02";
-	const user = await currentUser();
+	// const user = await currentUser();
 	console.log("searchParams =>", searchParams.categoryId);
 
 	const categories = await db.category.findMany({
@@ -39,9 +39,9 @@ const Dashboard = async ({ searchParams }: SearchPageProps) => {
 	// 	userId
 	// );
 
-	const { completedCourses, coursesInProgress } = await getDashboardCourses(
-		user?.id!
-	);
+	// const { completedCourses, coursesInProgress } = await getDashboardCourses(
+	// 	user?.id!
+	// );
 
 	return (
 		<>
