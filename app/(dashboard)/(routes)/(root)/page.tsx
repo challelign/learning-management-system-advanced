@@ -7,7 +7,6 @@ import InfoCard from "./_components/iInfo-card";
 import { CheckCircle, Clock } from "lucide-react";
 import Image from "next/image";
 import DashboardCarousel from "@/components/dashboard-carousel";
-import { TabsNavigation } from "@/components/tabs-navigation";
 import Categories from "../search/_components/categories";
 import { db } from "@/lib/db";
 import { getCourses } from "@/actions/get-courses";
