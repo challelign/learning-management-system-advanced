@@ -13,6 +13,7 @@ import { getCourses } from "@/actions/get-courses";
 import { getCoursesDashboard } from "@/actions/get-courses-dashboard";
 import { Separator } from "@/components/ui/separator";
 import SearchInput from "@/components/search-input";
+import CoursesListDashboard from "@/components/courses-list-dashboard";
 interface SearchPageProps {
 	searchParams: {
 		title: string;
@@ -113,7 +114,7 @@ const Dashboard = async ({ searchParams }: SearchPageProps) => {
 				</div>
 				<Separator />
 				<div className="space-y-7 p-6">
-					<CoursesList items={courses} />
+					<CoursesListDashboard items={courses} />
 				</div>
 			</div>
 		</>
