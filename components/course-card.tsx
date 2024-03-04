@@ -4,34 +4,127 @@ import { IconBadge } from "./icon-badge";
 import { BookOpen } from "lucide-react";
 import { formatPrice } from "@/lib/format";
 import { CourseProgress } from "./course-progress";
+import { auth, clerkClient } from "@clerk/nextjs";
+import CourseEnrollButton from "@/app/(course)/courses/[courseId]/chapters/[chapterId]/_components/course-enroll-button";
+import { getChapter } from "@/actions/get-chapter";
+import { db } from "@/lib/db";
 
 interface CourseCardProps {
 	id: string;
 	title: string;
+	description: string;
 	imageUrl: string;
+	userId: string;
 	chaptersLength: number;
 	price: number;
 	progress: number | null;
 	category: string;
 }
-const CourseCard = ({
+const CourseCard = async ({
 	id,
 	title,
+	description,
 	imageUrl,
 	chaptersLength,
 	price,
+	userId,
 	progress,
 	category,
 }: CourseCardProps) => {
+	const user = await clerkClient.users.getUser(userId);
+	console.log("[USER]", user.firstName);
+
+	const { userId: userIdAuth } = auth();
+	const purchase = await db.purchase.findUnique({
+		where: {
+			userId_courseId: {
+				userId: userIdAuth || "",
+				courseId: id,
+			},
+		},
+	});
+
+	// let hrefLink = "";
+	// if (!userIdAuth) {
+	// 	hrefLink = `/courses-details/${id}`;
+	// } else {
+	// 	hrefLink = `/courses/${id}`;
+	// }
 	return (
 		<Link href={`/courses/${id}`}>
-			<div className="group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full">
+			<div className="group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full relative">
 				<div className="relative w-full aspect-video rounded-md overflow-hidden">
 					<Image fill src={imageUrl} alt={title} className="object-cover" />
 				</div>
 				<div className="flex flex-col pt-2">
 					<div className="text-lg md:text-base font-medium group-hover:text-sky-700 transition line-clamp-2">
 						{title}
+					</div>
+					<p className="text-sm mb-4"> Created by {user.firstName}</p>
+					<p className="text-xs to-muted-foreground">{category}</p>
+					<div className="my-3 flex items-center gap-x-2 text-sm md:text-xs">
+						<div className="flex items-center gap-x-1 to-slate-500">
+							<IconBadge size="sm" icon={BookOpen} />
+							<span>
+								{chaptersLength} {chaptersLength === 1 ? "Chapter" : "Chapters"}
+							</span>
+						</div>
+					</div>
+					{progress !== null ? (
+						<CourseProgress
+							variant={progress === 100 ? "success" : "default"}
+							size="sm"
+							value={progress}
+						/>
+					) : (
+						<p className="text-md md:text-sm font-medium text-slate-700">
+							{formatPrice(price)}
+						</p>
+					)}
+				</div>
+				<div className=" opacity-0 group-hover:opacity-100 bg-white rounded-lg absolute inset-0 flex-col items-center justify-center transition">
+					<div className=" px-4">
+						<p className="text-lg font-medium mb-2 pt-3 justify-center text-center">
+							{title}
+						</p>
+						<p className="text-sm mb-4">{category}</p>
+						<p className="text-sm text-gray-500 line-clamp-3">{description}</p>
+						<div className="flex items-center gap-2 py-3">
+							{/* <span className="text-sm font-medium text-gray-700">
+								{formatPrice(price)}
+							</span> */}
+							{/* <button className="px-3  py-1 text-sm rounded-md bg-blue-500 text-white hover:bg-blue-600">
+								Add to cart
+							</button> */}
+
+							<div className="p-4 flex flex-col md:flex-row items-center justify-between">
+								{!purchase && !auth() ? (
+									<CourseEnrollButton courseId={id} price={price!} />
+								) : (
+									<Link href="/sign-up">
+										<button className="px-3  py-1 text-sm rounded-md bg-blue-400 text-white hover:bg-blue-500">
+											Please sign up to purchase
+										</button>
+									</Link>
+								)}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</Link>
+	);
+
+	/* 	return (
+		<Link href={`/courses/${id}`}>
+			<div className="group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full relative">
+				<div className="relative w-full aspect-video rounded-md overflow-hidden">
+					<Image fill src={imageUrl} alt={title} className="object-cover" />
+				</div>
+				<div className="flex flex-col pt-2">
+					<div className="text-lg md:text-base font-medium group-hover:text-sky-700 transition line-clamp-2">
+						{title}
+						{user.firstName}
 					</div>
 					<p className="text-xs to-muted-foreground">{category}</p>
 					<div className="my-3 flex items-center gap-x-2 text-sm md:text-xs">
@@ -54,9 +147,38 @@ const CourseCard = ({
 						</p>
 					)}
 				</div>
+				<div className="opacity-0 group-hover:opacity-100 bg-white rounded-lg absolute inset-0 flex items-center justify-center transition">
+					<div className="text-center px-4">
+						<div className="lg:flex lg:items-center">
+							<div className="lg:w-1/2">
+								<p className="text-lg font-medium mb-2">{title}</p>
+								<p className="text-sm mb-4">{category}</p>
+								<p className="text-sm text-gray-500 line-clamp-3">
+									Course description lorem ipsum dolor sit amet, consectetur
+									adipiscing elit. Suspendisse ultricies enim at augue
+									hendrerit, et commodo lorem commodo. Fusce sollicitudin,
+									mauris at maximus ultrices, nisl felis sodales odio, ac tempor
+									sem nunc et lectus.
+								</p>
+							</div>
+							<div className="lg:w-1/2">
+								<div className="flex items-center justify-center lg:justify-end">
+									<div className="lg:text-right">
+										<span className="text-sm font-medium text-gray-700">
+											{formatPrice(price)}
+										</span>
+										<button className="px-3 py-1 text-sm rounded-md bg-blue-500 text-white hover:bg-blue-600">
+											Enroll Now
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</Link>
-	);
+	); */
 };
 
 export default CourseCard;

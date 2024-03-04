@@ -1,3 +1,8 @@
+    "workbench.colorCustomizations": {
+    	"tab.activeBackground": "#16467e6c",
+    	"tab.activeBorderTop": "#F5DEB3"
+    },
+
 This interface indicates that when you use this component, you should pass an object with two properties:
 
 course: An object of type Course with an additional constraint that its chapters property is an array where each element is of type Chapter with a userProgress property of type UserProgress[] | null.

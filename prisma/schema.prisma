@@ -34,7 +34,7 @@ model Course {
   updatedAt DateTime @updatedAt
 
   @@index([categoryId])
-  @@fulltext([title])
+  @@fulltext([title,description])
 }
 
 // Category has a one-to-many relationship with Course  

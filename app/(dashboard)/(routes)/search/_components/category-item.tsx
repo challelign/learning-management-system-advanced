@@ -17,7 +17,7 @@ const CategoryItem = ({ label, value, icon: Icon }: CategoryItemProps) => {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const currentCategoryId = searchParams.get("categoryId");
-	const currentTitle = searchParams.get("title");
+	const currentTitle = searchParams.get("search");
 	// const currentTitle = searchParams.get("title") || null;
 	console.log(currentTitle);
 
@@ -28,7 +28,7 @@ const CategoryItem = ({ label, value, icon: Icon }: CategoryItemProps) => {
 			{
 				url: pathname,
 				query: {
-					title: currentTitle,
+					search: currentTitle,
 					// if item is selected ,and select again it will set null
 					categoryId: isSelected ? null : value,
 				},

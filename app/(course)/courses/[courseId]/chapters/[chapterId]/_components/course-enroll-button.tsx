@@ -1,7 +1,9 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/format";
+import { auth } from "@clerk/nextjs";
 import axios from "axios";
+import { redirect } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
@@ -11,6 +13,11 @@ interface CourseEnrollButtonProps {
 }
 const CourseEnrollButton = ({ price, courseId }: CourseEnrollButtonProps) => {
 	const [isLoading, setIsLoading] = useState(false);
+	const { userId } = auth();
+	if (!userId) {
+		toast.error("Please Login first");
+		return redirect("/sign-up");
+	}
 	const onClick = async () => {
 		try {
 			setIsLoading(false);

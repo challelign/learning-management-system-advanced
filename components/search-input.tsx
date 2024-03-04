@@ -12,7 +12,7 @@ const SearchInput = () => {
 	const pathname = usePathname();
 
 	// get currentTitle from url if title exist
-	const currentTitle = searchParams.get("title") || null;
+	const currentTitle = searchParams.get("search") || null;
 
 	// set default initial value to currentTitle
 	const [value, setValue] = useState(currentTitle);
@@ -25,7 +25,7 @@ const SearchInput = () => {
 				url: pathname,
 				query: {
 					categoryId: currentCategoryId,
-					title: debouncedValue,
+					search: debouncedValue,
 				},
 			},
 			{ skipEmptyString: true, skipNull: true }

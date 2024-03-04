@@ -18,6 +18,8 @@ const CoursesList = ({ items }: CoursesListProps) => {
 						key={item.id}
 						id={item.id}
 						title={item.title}
+						description={item.description!}
+						userId={item.userId}
 						imageUrl={item.imageUrl!}
 						chaptersLength={item.chapters.length}
 						price={item.price!}
@@ -28,7 +30,7 @@ const CoursesList = ({ items }: CoursesListProps) => {
 			</div>
 			{items.length === 0 && (
 				<div className="text-center text-sm to-muted-foreground mt-10">
-					No Course found
+					No Course Completed
 				</div>
 			)}
 		</div>
