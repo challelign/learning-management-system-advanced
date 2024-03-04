@@ -31,7 +31,7 @@ const CourseCardDashboard = async ({
 	progress,
 	category,
 }: CourseCardProps) => {
-	const user = await clerkClient.users.getUser(userId);
+	// const user = await clerkClient.users.getUser(userId);
 	// const { userId: userIdAuth } = auth();
 	// const user = await currentUser();
 	return (
@@ -44,7 +44,7 @@ const CourseCardDashboard = async ({
 					<div className="text-lg md:text-base font-medium group-hover:text-sky-700 transition line-clamp-2">
 						{title}
 					</div>
-					<p className="text-sm mb-4"> Created by {user.firstName}</p>
+					{/* <p className="text-sm mb-4"> Created by {user.firstName}</p> */}
 					<p className="text-xs to-muted-foreground">{category}</p>
 					<div className="my-3 flex items-center gap-x-2 text-sm md:text-xs">
 						<div className="flex items-center gap-x-1 to-slate-500">
