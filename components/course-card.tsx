@@ -100,7 +100,7 @@ const CourseCard = async ({
 							</button> */}
 
 							<div className="p-4 flex flex-col md:flex-row items-center justify-between">
-								{!purchase && !auth() ? (
+								{!purchase && !userIdAuth ? (
 									<CourseEnrollButton courseId={id} price={price!} />
 								) : (
 									<Link href="/sign-up">
