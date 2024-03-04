@@ -53,30 +53,37 @@ const Dashboard = async ({ searchParams }: SearchPageProps) => {
 		userIdAuth || ""
 	);
 
+	console.log("userIdAuth", userIdAuth);
 	return (
 		<>
 			<DashboardCarousel />
-			{completedCourses.length > 0 ||
-				(coursesInProgress.length > 0 && (
-					<div className="p-6 space-y-4">
-						<div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-							{/* TODO info card */}
-							<InfoCard
-								icon={Clock}
-								label="In Progress"
-								numberOfItems={coursesInProgress.length}
+
+			{}
+			<div>
+				{completedCourses.length > 0 ||
+					(coursesInProgress.length > 0 && (
+						<div className="p-6 space-y-4">
+							<div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+								{/* TODO info card */}
+								<InfoCard
+									icon={Clock}
+									label="In Progress"
+									numberOfItems={coursesInProgress.length}
+								/>
+								<InfoCard
+									icon={CheckCircle}
+									label="Completed"
+									numberOfItems={completedCourses.length}
+									variant="success"
+								/>
+							</div>
+							<CoursesList
+								items={[...coursesInProgress, ...completedCourses]}
 							/>
-							<InfoCard
-								icon={CheckCircle}
-								label="Completed"
-								numberOfItems={completedCourses.length}
-								variant="success"
-							/>
+							{/* <UserButton afterSignOutUrl="/" /> */}
 						</div>
-						<CoursesList items={[...coursesInProgress, ...completedCourses]} />
-						{/* <UserButton afterSignOutUrl="/" /> */}
-					</div>
-				))}
+					))}
+			</div>
 
 			<div className="flex-col py-2 p-3">
 				<h2 className="text-2xl pb-2 gap-4  h3-bold text-slate-600 ">

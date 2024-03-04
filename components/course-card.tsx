@@ -35,6 +35,8 @@ const CourseCard = async ({
 	console.log("[USER]", user.firstName);
 
 	const { userId: userIdAuth } = auth();
+	console.log("[userIdAuth]", userIdAuth);
+
 	const purchase = await db.purchase.findUnique({
 		where: {
 			userId_courseId: {
@@ -70,7 +72,7 @@ const CourseCard = async ({
 							</span>
 						</div>
 					</div>
-					{progress !== null ? (
+					{userIdAuth && progress !== null ? (
 						<CourseProgress
 							variant={progress === 100 ? "success" : "default"}
 							size="sm"
