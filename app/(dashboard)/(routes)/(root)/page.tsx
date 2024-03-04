@@ -21,8 +21,8 @@ interface SearchPageProps {
 	};
 }
 const Dashboard = async ({ searchParams }: SearchPageProps) => {
-	// let { userId } = auth();
-	let userId = "659804040fd75fd95096cb02";
+	const { userId: userIdAuth } = auth();
+	// let userId = "659804040fd75fd95096cb02";
 	// const user = ();
 	// const user = await clerkClient.users.getUser(userId);
 
@@ -30,9 +30,9 @@ const Dashboard = async ({ searchParams }: SearchPageProps) => {
 	// console.log(user.firstName);
 	// let userId = "659804040fd75fd95096cb02";
 	console.log("searchParams =>", searchParams.categoryId);
-	if (!userId) {
-		return redirect("/");
-	}
+	// if (!userId) {
+	// 	return redirect("/");
+	// }
 
 	const categories = await db.category.findMany({
 		orderBy: { name: "asc" },
@@ -51,8 +51,9 @@ const Dashboard = async ({ searchParams }: SearchPageProps) => {
 	// );
 
 	const { completedCourses, coursesInProgress } = await getDashboardCourses(
-		userId
+		userIdAuth || ""
 	);
+
 	return (
 		<>
 			<DashboardCarousel />
