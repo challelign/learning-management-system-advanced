@@ -4,7 +4,7 @@ import { IconBadge } from "./icon-badge";
 import { BookOpen } from "lucide-react";
 import { formatPrice } from "@/lib/format";
 import { CourseProgress } from "./course-progress";
-import { auth, clerkClient } from "@clerk/nextjs";
+import { auth, clerkClient, useAuth } from "@clerk/nextjs";
 import CourseEnrollButton from "@/app/(course)/courses/[courseId]/chapters/[chapterId]/_components/course-enroll-button";
 import { getChapter } from "@/actions/get-chapter";
 import { db } from "@/lib/db";
@@ -32,7 +32,7 @@ const CourseCardDashboard = async ({
 	category,
 }: CourseCardProps) => {
 	const user = await clerkClient.users.getUser(userId);
-	const { userId: userIdAuth } = auth();
+	// const { userId: userIdAuth } = auth();
 
 	return (
 		<Link href={`/courses/${id}`}>
@@ -84,14 +84,6 @@ const CourseCardDashboard = async ({
 										</button>
 									</Link>
 								)} */}
-
-								{!userIdAuth && (
-									<Link href="/sign-up">
-										<button className="px-3  py-1 text-sm rounded-md bg-blue-400 text-white hover:bg-blue-500">
-											Please sign up to purchase
-										</button>
-									</Link>
-								)}
 							</div>
 						</div>
 					</div>

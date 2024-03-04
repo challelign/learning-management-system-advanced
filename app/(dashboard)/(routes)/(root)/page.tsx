@@ -1,6 +1,6 @@
 import { getDashboardCourses } from "@/actions/get-dashboard-courses";
 import CoursesList from "@/components/courses-list";
-import { UserButton, auth, clerkClient } from "@clerk/nextjs";
+import { UserButton, auth, clerkClient, currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import InfoCard from "./_components/iInfo-card";
 
@@ -21,18 +21,10 @@ interface SearchPageProps {
 	};
 }
 const Dashboard = async ({ searchParams }: SearchPageProps) => {
-	const { userId: userIdAuth } = auth();
+	// const { userId: userIdAuth } = auth();
 	// let userId = "659804040fd75fd95096cb02";
-	// const user = ();
-	// const user = await clerkClient.users.getUser(userId);
-
-	// console.log(user.id);
-	// console.log(user.firstName);
-	// let userId = "659804040fd75fd95096cb02";
+	const user = await currentUser();
 	console.log("searchParams =>", searchParams.categoryId);
-	// if (!userId) {
-	// 	return redirect("/");
-	// }
 
 	const categories = await db.category.findMany({
 		orderBy: { name: "asc" },
@@ -51,10 +43,9 @@ const Dashboard = async ({ searchParams }: SearchPageProps) => {
 	// );
 
 	const { completedCourses, coursesInProgress } = await getDashboardCourses(
-		userIdAuth || ""
+		user?.id!
 	);
 
-	console.log("userIdAuth", userIdAuth);
 	return (
 		<>
 			<DashboardCarousel />
