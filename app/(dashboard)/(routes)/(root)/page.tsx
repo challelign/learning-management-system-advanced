@@ -1,6 +1,6 @@
 import { getDashboardCourses } from "@/actions/get-dashboard-courses";
 import CoursesList from "@/components/courses-list";
-import { currentUser } from "@clerk/nextjs";
+import { currentUser, auth } from "@clerk/nextjs";
 import InfoCard from "./_components/iInfo-card";
 
 import { CheckCircle, Clock } from "lucide-react";
@@ -18,7 +18,7 @@ interface SearchPageProps {
 	};
 }
 const Dashboard = async ({ searchParams }: SearchPageProps) => {
-	// const { userId: userIdAuth } = auth();
+	const { userId } = auth();
 	// let userId = "659804040fd75fd95096cb02";
 	// const user = await currentUser();
 	console.log("searchParams =>", searchParams.categoryId);
@@ -35,9 +35,9 @@ const Dashboard = async ({ searchParams }: SearchPageProps) => {
 	const courses = await getCoursesDashboard({
 		...searchParams,
 	});
-	// const { completedCourses, coursesInProgress } = await getDashboardCourses(
-	// 	userId
-	// );
+	const { completedCourses, coursesInProgress } = await getDashboardCourses(
+		userId
+	);
 
 	// const { completedCourses, coursesInProgress } = await getDashboardCourses(
 	// 	user?.id!
@@ -46,7 +46,6 @@ const Dashboard = async ({ searchParams }: SearchPageProps) => {
 	return (
 		<>
 			<DashboardCarousel />
-			{/*
 
 			<div>
 				{completedCourses.length > 0 ||
@@ -71,7 +70,6 @@ const Dashboard = async ({ searchParams }: SearchPageProps) => {
 						</div>
 					))}
 			</div>
-			 */}
 
 			<div className="flex-col py-2 p-3">
 				<h2 className="text-2xl pb-2 gap-4  h3-bold text-slate-600 ">
