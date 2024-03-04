@@ -37,21 +37,18 @@ const CourseCard = async ({
 	const { userId: userIdAuth } = auth();
 	console.log("[userIdAuth]", userIdAuth);
 
-	const purchase = await db.purchase.findUnique({
-		where: {
-			userId_courseId: {
-				userId: userIdAuth || "",
-				courseId: id,
+	let purchase = null;
+	if (userIdAuth) {
+		purchase = await db.purchase.findUnique({
+			where: {
+				userId_courseId: {
+					userId: userIdAuth!,
+					courseId: id,
+				},
 			},
-		},
-	});
+		});
+	}
 
-	// let hrefLink = "";
-	// if (!userIdAuth) {
-	// 	hrefLink = `/courses-details/${id}`;
-	// } else {
-	// 	hrefLink = `/courses/${id}`;
-	// }
 	return (
 		<Link href={`/courses/${id}`}>
 			<div className="group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full relative">
@@ -100,7 +97,7 @@ const CourseCard = async ({
 							</button> */}
 
 							<div className="p-4 flex flex-col md:flex-row items-center justify-between">
-								{!purchase && !userIdAuth ? (
+								{userIdAuth && !purchase ? (
 									<CourseEnrollButton courseId={id} price={price!} />
 								) : (
 									<Link href="/sign-up">
@@ -109,6 +106,11 @@ const CourseCard = async ({
 										</button>
 									</Link>
 								)}
+								{/* {!purchase && userIdAuth ? (
+									
+								) : (
+									
+								)} */}
 							</div>
 						</div>
 					</div>
