@@ -59,7 +59,6 @@ const Dashboard = async ({ searchParams }: SearchPageProps) => {
 		<>
 			<DashboardCarousel />
 
-			{}
 			<div>
 				{completedCourses.length > 0 ||
 					(coursesInProgress.length > 0 && (

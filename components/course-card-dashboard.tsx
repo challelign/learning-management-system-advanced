@@ -75,7 +75,7 @@ const CourseCardDashboard = async ({
 							</button> */}
 
 							<div className="p-4 flex flex-col md:flex-row items-center justify-between">
-								{userIdAuth ? (
+								{/* 	{userIdAuth ? (
 									<CourseEnrollButton courseId={id} price={price!} />
 								) : (
 									<Link href="/sign-up">
@@ -83,12 +83,15 @@ const CourseCardDashboard = async ({
 											Please sign up to purchase
 										</button>
 									</Link>
-								)}
-								{/* {!purchase && userIdAuth ? (
-									
-								) : (
-									
 								)} */}
+
+								{!userIdAuth && (
+									<Link href="/sign-up">
+										<button className="px-3  py-1 text-sm rounded-md bg-blue-400 text-white hover:bg-blue-500">
+											Please sign up to purchase
+										</button>
+									</Link>
+								)}
 							</div>
 						</div>
 					</div>
