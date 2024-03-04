@@ -1,15 +1,12 @@
 import { getDashboardCourses } from "@/actions/get-dashboard-courses";
 import CoursesList from "@/components/courses-list";
-import { UserButton, auth, clerkClient, currentUser } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
+import { currentUser } from "@clerk/nextjs";
 import InfoCard from "./_components/iInfo-card";
 
 import { CheckCircle, Clock } from "lucide-react";
-import Image from "next/image";
 import DashboardCarousel from "@/components/dashboard-carousel";
 import Categories from "../search/_components/categories";
 import { db } from "@/lib/db";
-import { getCourses } from "@/actions/get-courses";
 import { getCoursesDashboard } from "@/actions/get-courses-dashboard";
 import { Separator } from "@/components/ui/separator";
 import SearchInput from "@/components/search-input";
@@ -48,14 +45,13 @@ const Dashboard = async ({ searchParams }: SearchPageProps) => {
 
 	return (
 		<>
-			<DashboardCarousel />
+			{/* <DashboardCarousel />
 
 			<div>
 				{completedCourses.length > 0 ||
 					(coursesInProgress.length > 0 && (
 						<div className="p-6 space-y-4">
 							<div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-								{/* TODO info card */}
 								<InfoCard
 									icon={Clock}
 									label="In Progress"
@@ -71,10 +67,10 @@ const Dashboard = async ({ searchParams }: SearchPageProps) => {
 							<CoursesList
 								items={[...coursesInProgress, ...completedCourses]}
 							/>
-							{/* <UserButton afterSignOutUrl="/" /> */}
 						</div>
 					))}
 			</div>
+			 */}
 
 			<div className="flex-col py-2 p-3">
 				<h2 className="text-2xl pb-2 gap-4  h3-bold text-slate-600 ">
