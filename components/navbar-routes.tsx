@@ -1,9 +1,9 @@
 "use client";
 
-import { UserButton, UserProfile, auth, useAuth } from "@clerk/nextjs";
+import { UserButton, auth, useAuth } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, LogIn, LogOut, MoveRight, User } from "lucide-react";
+import { ArrowLeft, LogOut, MoveRight } from "lucide-react";
 import Link from "next/link";
 import SearchInput from "./search-input";
 import { isTeacher } from "@/lib/teacher";
@@ -23,18 +23,17 @@ const NavbarRoutes = () => {
 				</div>
 			)}
 			<div className="flex gap-x-2 ml-auto">
-				{isCoursePage ||
-					(userId && (
-						<Link
-							href={`/search`}
-							className="flex items-center text-sm hover:opacity-75 transition "
-						>
-							<Button size="sm" variant="ghost">
-								<ArrowLeft className="h-4 w-4 mr-2" /> Back to course
-							</Button>
-						</Link>
-					))}
-				{isTeacherPage || (isCoursePage && userId) ? (
+				{isCoursePage && (
+					<Link
+						href={`/search`}
+						className="flex items-center text-sm hover:opacity-75 transition "
+					>
+						<Button size="sm" variant="ghost">
+							<ArrowLeft className="h-4 w-4 mr-2" /> Back to course
+						</Button>
+					</Link>
+				)}
+				{isTeacherPage || isCoursePage ? (
 					<Link href="/">
 						<Button size="sm" variant="ghost">
 							<LogOut className="h-4 w-4 mr-2" />
@@ -49,24 +48,6 @@ const NavbarRoutes = () => {
 					</Link>
 				) : null}
 				{/* this help when we logout it will not redirect to clerk site */}
-
-				{!userId && (
-					<>
-						<Link href="/sign-in">
-							<Button size="sm" variant="ghost">
-								<LogIn className="h-4 w-4 mr-2" />
-								Sign in
-							</Button>
-						</Link>
-						<Link href="/sign-up">
-							<Button size="sm" variant="ghost">
-								<User className="h-4 w-4 mr-2" />
-								Sign up
-							</Button>
-						</Link>
-					</>
-				)}
-				{/* <UserProfile /> */}
 				<UserButton afterSignOutUrl="/" />
 			</div>
 		</>
