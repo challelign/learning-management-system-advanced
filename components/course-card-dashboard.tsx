@@ -31,9 +31,8 @@ const CourseCardDashboard = async ({
 	progress,
 	category,
 }: CourseCardProps) => {
-	// const user = await clerkClient.users.getUser(userId);
-	// const { userId: userIdAuth } = auth();
-	// const user = await currentUser();
+	const user = await clerkClient.users.getUser(userId);
+	const { userId: userIdAuth } = auth();
 	return (
 		<Link href={`/courses/${id}`}>
 			<div className="group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full relative">
@@ -44,7 +43,7 @@ const CourseCardDashboard = async ({
 					<div className="text-lg md:text-base font-medium group-hover:text-sky-700 transition line-clamp-2">
 						{title}
 					</div>
-					{/* <p className="text-sm mb-4"> Created by {user.firstName}</p> */}
+					<p className="text-sm mb-4"> Created by {user.firstName}</p>
 					<p className="text-xs to-muted-foreground">{category}</p>
 					<div className="my-3 flex items-center gap-x-2 text-sm md:text-xs">
 						<div className="flex items-center gap-x-1 to-slate-500">
@@ -84,6 +83,20 @@ const CourseCardDashboard = async ({
 										</button>
 									</Link>
 								)} */}
+
+								{userIdAuth ? (
+									<Link href={`/courses/${id}`}>
+										<button className="px-3  py-1 text-sm rounded-md bg-blue-400 text-white hover:bg-blue-500">
+											Go to course
+										</button>
+									</Link>
+								) : (
+									<Link href="/sign-up">
+										<button className="px-3  py-1 text-sm rounded-md bg-blue-400 text-white hover:bg-blue-500">
+											Please sign up to purchase
+										</button>
+									</Link>
+								)}
 							</div>
 						</div>
 					</div>

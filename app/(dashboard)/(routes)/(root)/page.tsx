@@ -36,7 +36,7 @@ const Dashboard = async ({ searchParams }: SearchPageProps) => {
 		...searchParams,
 	});
 	const { completedCourses, coursesInProgress } = await getDashboardCourses(
-		userId
+		userId!
 	);
 
 	// const { completedCourses, coursesInProgress } = await getDashboardCourses(
@@ -47,29 +47,26 @@ const Dashboard = async ({ searchParams }: SearchPageProps) => {
 		<>
 			<DashboardCarousel />
 
-			<div>
-				{completedCourses.length > 0 ||
-					(coursesInProgress.length > 0 && (
-						<div className="p-6 space-y-4">
-							<div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-								<InfoCard
-									icon={Clock}
-									label="In Progress"
-									numberOfItems={coursesInProgress.length}
-								/>
-								<InfoCard
-									icon={CheckCircle}
-									label="Completed"
-									numberOfItems={completedCourses.length}
-									variant="success"
-								/>
-							</div>
-							<CoursesList
-								items={[...coursesInProgress, ...completedCourses]}
+			{userId && (
+				<div>
+					<div className="p-6 space-y-4">
+						<div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+							<InfoCard
+								icon={Clock}
+								label="In Progress"
+								numberOfItems={coursesInProgress.length}
+							/>
+							<InfoCard
+								icon={CheckCircle}
+								label="Completed"
+								numberOfItems={completedCourses.length}
+								variant="success"
 							/>
 						</div>
-					))}
-			</div>
+						<CoursesList items={[...coursesInProgress, ...completedCourses]} />
+					</div>
+				</div>
+			)}
 
 			<div className="flex-col py-2 p-3">
 				<h2 className="text-2xl pb-2 gap-4  h3-bold text-slate-600 ">
