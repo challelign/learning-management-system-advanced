@@ -14,7 +14,7 @@ const DashboardCarousel = () => {
 					useKeyboardArrows
 					transitionTime={5000}
 					autoPlay // Add this line to enable automatic sliding
-					interval={3000} // Set the interval (in milliseconds) between each slide
+					// interval={3000} // Set the interval (in milliseconds) between each slide
 				>
 					<div className="slide-holder">
 						<Image
