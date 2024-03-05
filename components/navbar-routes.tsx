@@ -3,7 +3,7 @@
 import { UserButton, auth, useAuth } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, LogOut, MoveRight } from "lucide-react";
+import { ArrowLeft, LogIn, LogOut, MoveRight, User } from "lucide-react";
 import Link from "next/link";
 import SearchInput from "./search-input";
 import { isTeacher } from "@/lib/teacher";
@@ -47,6 +47,22 @@ const NavbarRoutes = () => {
 						</Button>
 					</Link>
 				) : null}
+				{!userId && (
+					<>
+						<Link href="/sign-in">
+							<Button size="sm" variant="ghost">
+								<LogIn className="text-red-800 " />
+								Sign in
+							</Button>
+						</Link>
+						<Link href="/sign-up">
+							<Button size="sm" variant="ghost">
+								<User className="text-red-800 " />
+								Sign up
+							</Button>
+						</Link>
+					</>
+				)}
 				{/* this help when we logout it will not redirect to clerk site */}
 				<UserButton afterSignOutUrl="/" />
 			</div>
