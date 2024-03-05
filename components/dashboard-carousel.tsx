@@ -12,9 +12,11 @@ const DashboardCarousel = () => {
 					showStatus={false}
 					infiniteLoop
 					useKeyboardArrows
-					transitionTime={300}
+					transitionTime={1000}
+					autoPlay // Add this line to enable automatic sliding
+					interval={3000} // Set the interval (in milliseconds) between each slide
 				>
-					<div className="slide-holder ">
+					<div className="slide-holder">
 						<Image
 							className="w-full h-auto"
 							src="/image/dashboard-udemy.jpg"
