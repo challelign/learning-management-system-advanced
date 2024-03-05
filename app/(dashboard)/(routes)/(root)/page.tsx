@@ -11,6 +11,7 @@ import { getCoursesDashboard } from "@/actions/get-courses-dashboard";
 import { Separator } from "@/components/ui/separator";
 import SearchInput from "@/components/search-input";
 import CoursesListDashboard from "@/components/courses-list-dashboard";
+import CourseCommentWithStartForm from "@/app/(course)/courses/[courseId]/chapters/[chapterId]/_components/course-comment-with-star-form";
 interface SearchPageProps {
 	searchParams: {
 		title: string;
@@ -35,6 +36,7 @@ const Dashboard = async ({ searchParams }: SearchPageProps) => {
 	const courses = await getCoursesDashboard({
 		...searchParams,
 	});
+	console.log(courses);
 	const { completedCourses, coursesInProgress } = await getDashboardCourses(
 		userId!
 	);
@@ -98,6 +100,8 @@ const Dashboard = async ({ searchParams }: SearchPageProps) => {
 				<div className="space-y-7 p-6">
 					<CoursesListDashboard items={courses} />
 				</div>
+
+				<CourseCommentWithStartForm courseId="0e5ee95f-8676-4e9d-a704-c45ad2cfdc18" />
 			</div>
 		</>
 	);

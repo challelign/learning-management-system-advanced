@@ -26,15 +26,16 @@ model Course {
   categoryId String?
   category   Category? @relation(fields: [categoryId], references: [id])
 
-  chapters    Chapter[]
-  attachments Attachment[]
-  purchases   Purchase[]
+  chapters      Chapter[]
+  attachments   Attachment[]
+  purchases     Purchase[]
+  courseRatting CourseRatting[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([categoryId])
-  @@fulltext([title,description])
+  @@fulltext([title, description])
 }
 
 // Category has a one-to-many relationship with Course  
@@ -121,6 +122,22 @@ model UserProgress {
 
 model Purchase {
   id     String @id @default(uuid())
+  userId String
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+
+  @@unique([userId, courseId])
+  @@index([courseId])
+}
+
+model CourseRatting {
+  id     String  @id @default(uuid())
+  rating Float?
+  review String? @db.Text
   userId String
 
   courseId String

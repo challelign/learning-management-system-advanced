@@ -10,6 +10,7 @@ import { Preview } from "@/components/preview";
 import { VideoPlayer } from "./_components/video-player";
 import CourseProgressButton from "./_components/course-progress-button";
 import CourseEnrollButton from "./_components/course-enroll-button";
+import CourseCommentWithStartForm from "./_components/course-comment-with-star-form";
 
 const ChapterIdPage = async ({
 	params,
@@ -107,6 +108,12 @@ const ChapterIdPage = async ({
 					)}
 				</div>
 			</div>
+
+			<CourseCommentWithStartForm
+				// initialData={course}
+				userId={userId}
+				courseId={params.courseId}
+			/>
 		</div>
 	);
 };

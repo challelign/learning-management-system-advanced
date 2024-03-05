@@ -87,3 +87,33 @@ export async function PATCH(
 		return new NextResponse("Internal Error ", { status: 500 });
 	}
 }
+
+export async function POST(
+	req: Request,
+	{ params }: { params: { courseId: string } }
+) {
+	try {
+		const { userId } = auth();
+		const { values } = await req.json();
+		console.log(values);
+		const course = await db.course.findUnique({
+			where: {
+				id: params.courseId,
+				userId,
+			},
+		});
+
+		if (!userId) {
+			return new NextResponse("Unauthorized ", { status: 401 });
+		}
+		if (!course) {
+			return new NextResponse("Course not found ", { status: 404 });
+		}
+
+		const courseRatting = await db.courseRatting;
+		return NextResponse.json(courseRatting);
+	} catch (error) {
+		console.log("[COURSE_REVIEW]", error);
+		return new NextResponse("Internal Error ", { status: 500 });
+	}
+}
