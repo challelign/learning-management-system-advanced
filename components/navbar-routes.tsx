@@ -43,7 +43,7 @@ const NavbarRoutes = () => {
 				) : isTeacher(userId) ? (
 					<Link href="/teacher/courses">
 						<Button size="sm" variant="ghost">
-							<MoveRight className="text-sky-500 " /> Teacher mode
+							<MoveRight className="text-red-800" /> Teacher mode
 						</Button>
 					</Link>
 				) : null}
@@ -51,13 +51,13 @@ const NavbarRoutes = () => {
 					<>
 						<Link href="/sign-in">
 							<Button size="sm" variant="ghost">
-								<LogIn className="text-sky-500 " />
+								<LogIn className="text-sky-700" />
 								Sign in
 							</Button>
 						</Link>
 						<Link href="/sign-up">
 							<Button size="sm" variant="ghost">
-								<User className="text-red-800 " />
+								<User className="text-sky-700" />
 								Sign up
 							</Button>
 						</Link>
