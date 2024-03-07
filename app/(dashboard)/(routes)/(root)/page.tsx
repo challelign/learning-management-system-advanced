@@ -20,7 +20,7 @@ interface SearchPageProps {
 }
 const Dashboard = async ({ searchParams }: SearchPageProps) => {
 	const { userId } = auth();
-	// let userId = "659804040fd75fd95096cb02";
+	// let userId = "user_2c7WDRhRgaTXgF3G3JIaInZbQD4";
 	// const user = await currentUser();
 	console.log("searchParams =>", searchParams.categoryId);
 
@@ -86,9 +86,6 @@ const Dashboard = async ({ searchParams }: SearchPageProps) => {
 					video courses with new additions published every month
 				</p>
 			</div>
-			{/* <div className="flex gap-4 p-2">
-				<TabsNavigation />
-			</div> */}
 			<div className="px-6 space-x-4">
 				<div className="p-6 md:mb-0 block">
 					<SearchInput />
@@ -100,8 +97,6 @@ const Dashboard = async ({ searchParams }: SearchPageProps) => {
 				<div className="space-y-7 p-6">
 					<CoursesListDashboard items={courses} />
 				</div>
-
-				<CourseCommentWithStartForm courseId="0e5ee95f-8676-4e9d-a704-c45ad2cfdc18" />
 			</div>
 		</>
 	);

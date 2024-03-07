@@ -2,18 +2,18 @@
 import React, { useState, FC } from "react";
 
 interface StarRatingProps {
-	onChange: (value: number) => void;
+	onChange?: (value: number) => void;
+	value?: number;
 	starSize?: string;
 }
 
-const StarRating = ({ onChange, starSize = "text-4xl" }: StarRatingProps) => {
-	const [rating, setRating] = useState<number>(0);
+const StarRating = ({
+	onChange,
+	value,
+	starSize = "text-4xl",
+}: StarRatingProps) => {
+	const [rating, setRating] = useState<number>(value || 0);
 
-	// console.log(rating);
-	// const handleStarClick = (value: number) => {
-	// 	setRating(value);
-	// 	onChange(value);
-	// };
 	const handleStarClick = (
 		event: React.MouseEvent<HTMLButtonElement>,
 		value: number
@@ -30,7 +30,6 @@ const StarRating = ({ onChange, starSize = "text-4xl" }: StarRatingProps) => {
 			{[1, 2, 3, 4, 5].map((star) => (
 				<button
 					key={star}
-					// onClick={() => handleStarClick(star)}
 					onClick={(event) => handleStarClick(event, star)}
 					className={`text-yellow-500  ${
 						star <= rating ? "fill" : ""

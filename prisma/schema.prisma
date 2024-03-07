@@ -21,6 +21,7 @@ model Course {
   description String? @db.Text
   imageUrl    String? @db.Text
   price       Float?
+  totalRating Float?  @default(0)
   isPublished Boolean @default(false)
 
   categoryId String?

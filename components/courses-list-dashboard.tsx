@@ -19,6 +19,7 @@ const CoursesListDashboard = ({ items }: CoursesListProps) => {
 						key={item.id}
 						id={item.id}
 						title={item.title}
+						totalReview={item.totalRating!}
 						description={item.description!}
 						userId={item.userId}
 						imageUrl={item.imageUrl!}

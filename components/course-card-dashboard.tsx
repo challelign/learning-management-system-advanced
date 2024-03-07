@@ -8,10 +8,12 @@ import { auth, clerkClient, currentUser, useAuth } from "@clerk/nextjs";
 import CourseEnrollButton from "@/app/(course)/courses/[courseId]/chapters/[chapterId]/_components/course-enroll-button";
 import { getChapter } from "@/actions/get-chapter";
 import { db } from "@/lib/db";
+import StarRatingValue from "@/app/(course)/courses/[courseId]/chapters/[chapterId]/_components/star-rating-value";
 
 interface CourseCardProps {
 	id: string;
 	title: string;
+	totalReview: number;
 	description: string;
 	imageUrl: string;
 	userId: string;
@@ -23,6 +25,7 @@ interface CourseCardProps {
 const CourseCardDashboard = async ({
 	id,
 	title,
+	totalReview,
 	description,
 	imageUrl,
 	chaptersLength,
@@ -32,6 +35,8 @@ const CourseCardDashboard = async ({
 	category,
 }: CourseCardProps) => {
 	const user = await clerkClient.users.getUser(userId);
+	// let userIdAuth = "user_2c7WDRhRgaTXgF3G3JIaInZbQD4";
+
 	const { userId: userIdAuth } = auth();
 	return (
 		<Link href={`/courses/${id}`}>
@@ -45,6 +50,10 @@ const CourseCardDashboard = async ({
 					</div>
 					<p className="text-sm mb-4"> Created by {user.firstName}</p>
 					<p className="text-xs to-muted-foreground">{category}</p>
+					<div className="pt-3 text-sm text-sky-950  font-black flex justify-start items-center gap-x-3 content-center">
+						{totalReview}
+						<StarRatingValue starSize={"text-2xl"} value={totalReview} />
+					</div>
 					<div className="my-3 flex items-center gap-x-2 text-sm md:text-xs">
 						<div className="flex items-center gap-x-1 to-slate-500">
 							<IconBadge size="sm" icon={BookOpen} />
@@ -66,24 +75,7 @@ const CourseCardDashboard = async ({
 						<p className="text-sm mb-4">{category}</p>
 						<p className="text-sm text-gray-500 line-clamp-3">{description}</p>
 						<div className="flex items-center gap-2 py-3">
-							{/* <span className="text-sm font-medium text-gray-700">
-								{formatPrice(price)}
-							</span> */}
-							{/* <button className="px-3  py-1 text-sm rounded-md bg-blue-500 text-white hover:bg-blue-600">
-								Add to cart
-							</button> */}
-
 							<div className="p-4 flex flex-col md:flex-row items-center justify-between">
-								{/* 	{userIdAuth ? (
-									<CourseEnrollButton courseId={id} price={price!} />
-								) : (
-									<Link href="/sign-up">
-										<button className="px-3  py-1 text-sm rounded-md bg-blue-400 text-white hover:bg-blue-500">
-											Please sign up to purchase
-										</button>
-									</Link>
-								)} */}
-
 								{userIdAuth ? (
 									<Link href={`/courses/${id}`}>
 										<button className="px-3  py-1 text-sm rounded-md bg-blue-400 text-white hover:bg-blue-500">

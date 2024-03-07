@@ -16,10 +16,10 @@ const CourseEnrollButton = ({ price, courseId }: CourseEnrollButtonProps) => {
 	// const { userId } = auth();
 	const { isLoaded, userId, sessionId, getToken } = useAuth();
 
-	if (!userId) {
-		toast.error("Please Login first");
-		return redirect("/sign-up");
-	}
+	// if (!userId) {
+	// 	toast.error("Please Login first");
+	// 	return redirect("/sign-up");
+	// }
 	const onClick = async () => {
 		try {
 			setIsLoading(false);

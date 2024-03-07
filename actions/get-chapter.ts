@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { Attachment, Chapter } from "@prisma/client";
+import { Attachment, Chapter, CourseRatting } from "@prisma/client";
 
 interface GetChapterProps {
 	userId: string;
@@ -28,6 +28,7 @@ export const getChapter = async ({
 			},
 			select: {
 				price: true,
+				totalRating: true,
 			},
 		});
 
@@ -44,7 +45,13 @@ export const getChapter = async ({
 		let muxData = null;
 		let attachments: Attachment[] = [];
 		let nextChapter: Chapter | null = null;
+		let courseRatting: CourseRatting[] = [];
 
+		courseRatting = await db.courseRatting.findMany({
+			where: {
+				courseId: courseId,
+			},
+		});
 		if (purchase) {
 			attachments = await db.attachment.findMany({
 				where: {
@@ -95,6 +102,7 @@ export const getChapter = async ({
 			course,
 			muxData,
 			attachments,
+			courseRatting,
 			nextChapter,
 			userProgress,
 			purchase,
@@ -106,6 +114,7 @@ export const getChapter = async ({
 			course: null,
 			muxData: null,
 			attachments: [],
+			courseRatting: [],
 			nextChapter: null,
 			userProgress: null,
 			purchase: null,

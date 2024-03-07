@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
-import { File } from "lucide-react";
+import { File, X } from "lucide-react";
 
 import { getChapter } from "@/actions/get-chapter";
 import { Banner } from "@/components/banner";
@@ -11,6 +11,8 @@ import { VideoPlayer } from "./_components/video-player";
 import CourseProgressButton from "./_components/course-progress-button";
 import CourseEnrollButton from "./_components/course-enroll-button";
 import CourseCommentWithStartForm from "./_components/course-comment-with-star-form";
+import { db } from "@/lib/db";
+import UserProfileReview from "@/components/user-profile-review";
 
 const ChapterIdPage = async ({
 	params,
@@ -18,15 +20,36 @@ const ChapterIdPage = async ({
 	params: { courseId: string; chapterId: string };
 }) => {
 	const { userId } = auth();
+	// let userId = "user_2c7WDRhRgaTXgF3G3JIaInZbQD4";
 
 	if (!userId) {
 		return redirect("/");
 	}
-
+	const reviewCourse = await db.courseRatting.findUnique({
+		where: {
+			userId_courseId: {
+				userId,
+				courseId: params.courseId,
+			},
+		},
+		include: {
+			course: true,
+			// attachments: {
+			// 	orderBy: {
+			// 		createdAt: "asc",
+			// 	},
+			// },
+		},
+	});
+	console.log("[reviewCourse]", reviewCourse);
+	// if (!reviewCourse) {
+	// 	return redirect("/");
+	// }
 	const {
 		chapter,
 		course,
 		muxData,
+		courseRatting,
 		attachments,
 		nextChapter,
 		userProgress,
@@ -40,6 +63,7 @@ const ChapterIdPage = async ({
 	if (!chapter || !course) {
 		return redirect("/");
 	}
+	console.log("[courseRatting]", courseRatting);
 
 	const isLocked = !chapter.isFree && !purchase;
 	const completeOnEnd = !!purchase && !userProgress?.isCompleted;
@@ -107,13 +131,54 @@ const ChapterIdPage = async ({
 						</>
 					)}
 				</div>
-			</div>
 
-			<CourseCommentWithStartForm
-				// initialData={course}
-				userId={userId}
-				courseId={params.courseId}
-			/>
+				<div className="p-4 text-2xl text-sky-950  font-black">
+					⭐ {course.totalRating} course rating
+					{/* 2K ratings */}
+				</div>
+				<div>
+					<Separator />
+					{purchase && (
+						<div className="p-4">
+							<CourseCommentWithStartForm
+								initialData={reviewCourse!}
+								userId={userId}
+								courseId={params.courseId}
+								reviewId={reviewCourse?.id!}
+							/>
+						</div>
+					)}
+
+					{!!courseRatting.length && (
+						<>
+							<div className="grid grid-cols-2 gap-4">
+								{courseRatting.map((rating) => {
+									if (rating.userId !== userId) {
+										return (
+											<>
+												<div className="flex flex-wrap items-center justify-center gap-5 cursor-pointer">
+													<UserProfileReview
+														review={rating.review!}
+														reviewValue={rating.rating!}
+														createdAt={rating.createdAt}
+													/>
+												</div>
+											</>
+										);
+									}
+								})}
+							</div>
+						</>
+					)}
+				</div>
+				<div className="p-4">
+					{courseRatting.length == 0 && (
+						<div className="font-medium flex items-center justify-between">
+							No review yet
+						</div>
+					)}
+				</div>
+			</div>
 		</div>
 	);
 };

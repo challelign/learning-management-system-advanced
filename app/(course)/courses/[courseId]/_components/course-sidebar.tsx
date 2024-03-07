@@ -15,6 +15,7 @@ interface CourseSidebarProps {
 }
 const CourseSideBar = async ({ course, progressCount }: CourseSidebarProps) => {
 	let { userId } = auth();
+	// let userId = "user_2c7WDRhRgaTXgF3G3JIaInZbQD4";
 
 	if (!userId) {
 		return redirect("/");

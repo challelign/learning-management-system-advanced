@@ -3,10 +3,11 @@ import * as z from "zod";
 import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Pencil } from "lucide-react";
+import { Pencil, X } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+
 import {
 	Form,
 	FormControl,
@@ -21,26 +22,24 @@ import { Editor } from "@/components/editor";
 import { Preview } from "@/components/preview";
 import { Metadata } from "next";
 import StarRating from "./star-rating";
+import StarRatingValue from "./star-rating-value";
+import TimeStampForm from "./time-stamp-form";
 export const metadata: Metadata = {
 	title: "Chapter Description",
 	description: "Chapter Description",
 };
 
 interface CourseCommentWithStartFormProps {
-	initialData: Course & { courseRatting: CourseRatting[] };
+	initialData: CourseRatting;
 	userId: string;
+	reviewId?: string;
 	courseId: string;
-	// chapterId: string;
 }
 const formSchema = z.object({
 	rating: z
 		.number()
 		.min(1, "Number should be greater than or equal to 1")
 		.max(5, "Number should be less than or equal to 5"),
-
-	// review: z.string().trim().min(2, {
-	// 	message: "Review can not be empty!",
-	// }),
 
 	review: z.string().refine(
 		(value) => {
@@ -56,10 +55,13 @@ const formSchema = z.object({
 const CourseCommentWithStartForm = ({
 	initialData,
 	userId,
+	reviewId,
 	courseId,
-}: // chapterId,
-CourseCommentWithStartFormProps) => {
+}: CourseCommentWithStartFormProps) => {
 	const [isEditing, setIsEditing] = useState(false);
+	const [deletingId, setDeletingId] = useState<string | null>(null);
+
+	const isUpdating = !!initialData; // boolean value
 
 	const toggleEdit = () => setIsEditing((current) => !current);
 
@@ -69,57 +71,95 @@ CourseCommentWithStartFormProps) => {
 		defaultValues: {
 			rating: initialData?.rating || 0,
 			review: initialData?.review || "",
-			rating: 0,
-			review: "",
 		},
 	});
 
 	const { isSubmitting, isValid } = form.formState;
-	const onSubmit = async (values: z.infer<typeof formSchema>) => {
-		// console.log(values.review.length);
-		// console.log(values.review);
+
+	const onSubmit = async (
+		values: z.infer<typeof formSchema>,
+		isUpdating: boolean
+	) => {
 		try {
-			await axios.patch(`/api/courses/${courseId}/`, values);
-			toast.success("Course reviewed");
-			toggleEdit();
+			if (isUpdating) {
+				await axios.patch(`/api/courses/${courseId}/review`, values);
+				toast.success("Course reviewed updated");
+			} else {
+				await axios.post(`/api/courses/${courseId}/review`, values);
+				toast.success("Course reviewed");
+			}
 			router.refresh();
+			toggleEdit();
 		} catch (error) {
 			console.log(error);
 			toast.error("Something went wrong");
 		}
 	};
+	const onDelete = async (id: string) => {
+		try {
+			setDeletingId(id);
+			console.log(id);
+			await axios.delete(`/api/courses/${courseId}/review/${id}`);
+			toast.success("Course Review deleted ");
+			router.refresh();
+		} catch (error) {
+			console.log(error);
+			toast.error("Something went wrong");
+		} finally {
+			setDeletingId(null);
+		}
+	};
 	return (
 		<div className="mt-6 border bg-slate-100 rounded-md p-4">
 			<div className="font-medium flex items-center justify-between">
-				Course Review
+				Course review
 				<Button onClick={toggleEdit} variant="ghost">
 					{isEditing ? (
 						<>Cancel</>
 					) : (
 						<>
 							<Pencil className="h-4 w-4 mr-2" />
-							Edit Review
+							Edit | Add Your review
 						</>
 					)}
 				</Button>
 			</div>
-			{/* {!isEditing && (
+			{!isEditing && (
 				<div
 					className={cn(
 						"text-sm mt-2",
-						!initialData.description && "text-slate-500 italic"
+						!initialData?.review && "text-slate-500 italic"
 					)}
 				>
-					{!initialData.description && "No description"}
-					{initialData.description && (
-						<Preview value={initialData.description} />
+					{!initialData?.review && "You did`t review the course yet!"}
+					{initialData?.review && initialData?.rating && (
+						<>
+							<div className="flex justify-between items-center  ">
+								<div>
+									<Preview value={initialData?.review} />
+								</div>
+								<div className="w-60 text-sky-600 font-bold ">
+									<TimeStampForm createdAt={initialData.createdAt} />
+								</div>
+								<button
+									onClick={() => onDelete(initialData.id)}
+									className="ml-auto hover:opacity-75 transition"
+								>
+									<X className="h-4 w-4" />
+								</button>
+							</div>
+
+							<div className="ml-4">
+								<StarRatingValue value={initialData.rating} />
+							</div>
+						</>
 					)}
 				</div>
-			)} */}
+			)}
 			{isEditing && (
 				<Form {...form}>
 					<form
-						onSubmit={form.handleSubmit(onSubmit)}
+						onSubmit={form.handleSubmit((data) => onSubmit(data, isUpdating))}
 						className="space-y-4 mt-4"
 					>
 						<FormField
@@ -134,25 +174,18 @@ CourseCommentWithStartFormProps) => {
 								</FormItem>
 							)}
 						/>
-
 						<FormField
 							control={form.control}
 							name="rating"
 							render={({ field }) => (
 								<FormItem>
 									<FormControl>
-										<StarRating
-											// onChange={(value) => form.setValue("rating", value)}
-											{...field}
-										/>
+										<StarRating {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
 							)}
 						/>
-
-						{/* <StarRating onChange={(value) => form.setValue("ratting", value)} /> */}
-
 						<div className="flex items-center gap-x-2">
 							<Button disabled={!isValid || isSubmitting} type="submit">
 								Save
@@ -160,31 +193,6 @@ CourseCommentWithStartFormProps) => {
 						</div>
 					</form>
 				</Form>
-
-				/* 	<Form {...form}>
-					<form
-						onSubmit={form.handleSubmit(onSubmit)}
-						className="space-y-4 mt-4"
-					>
-						<FormField
-							control={form.control}
-							name="description"
-							render={({ field }) => (
-								<FormItem>
-									<FormControl>
-										<Editor {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<div className="flex items-center gap-x-2">
-							<Button disabled={!isValid || isSubmitting} type="submit">
-								Save
-							</Button>
-						</div>
-					</form>
-				</Form> */
 			)}
 		</div>
 	);

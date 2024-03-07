@@ -4,10 +4,12 @@ import { IconBadge } from "./icon-badge";
 import { BookOpen } from "lucide-react";
 import { formatPrice } from "@/lib/format";
 import { CourseProgress } from "./course-progress";
+import StarRatingValue from "@/app/(course)/courses/[courseId]/chapters/[chapterId]/_components/star-rating-value";
 
 interface CourseCardProps {
 	id: string;
 	title: string;
+	totalReview: number;
 	imageUrl: string;
 	chaptersLength: number;
 	price: number;
@@ -17,6 +19,7 @@ interface CourseCardProps {
 const CourseCard = ({
 	id,
 	title,
+	totalReview,
 	imageUrl,
 	chaptersLength,
 	price,
@@ -34,6 +37,10 @@ const CourseCard = ({
 						{title}
 					</div>
 					<p className="text-xs to-muted-foreground">{category}</p>
+					<div className="pt-3 text-sm text-sky-950  font-black flex justify-start items-center gap-x-3 content-center">
+						{totalReview}
+						<StarRatingValue starSize={"text-2xl"} value={totalReview} />
+					</div>
 					<div className="my-3 flex items-center gap-x-2 text-sm md:text-xs">
 						<div className="flex items-center gap-x-1 to-slate-500">
 							<IconBadge size="sm" icon={BookOpen} />
@@ -53,6 +60,7 @@ const CourseCard = ({
 							{formatPrice(price)}
 						</p>
 					)}
+					{/* <StarRatingValue value={totalReview} /> */}
 				</div>
 			</div>
 		</Link>
