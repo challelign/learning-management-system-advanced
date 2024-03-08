@@ -30,7 +30,7 @@ const SearchInput = () => {
 			},
 			{ skipEmptyString: true, skipNull: true }
 		);
-		router.push(url);
+		router.push(url, { scroll: false });
 	}, [debouncedValue, currentCategoryId, router, pathname]);
 	return (
 		<div className="relative">
