@@ -87,6 +87,7 @@ const SearchInput = () => {
 		currentRating,
 		currentPage,
 	]);  
+	*/
 	return (
 		<div className="relative">
 			<Search className="h-4 w-4 absolute top-3 left-3 text-slate-600" />
