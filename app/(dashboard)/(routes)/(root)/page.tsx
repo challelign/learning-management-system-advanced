@@ -1,53 +1,68 @@
+import { useRouter } from "next/router";
+
 import { getDashboardCourses } from "@/actions/get-dashboard-courses";
 import CoursesList from "@/components/courses-list";
 import { currentUser, auth } from "@clerk/nextjs";
 import InfoCard from "./_components/iInfo-card";
 
 import { CheckCircle, Clock } from "lucide-react";
-import DashboardCarousel from "@/components/dashboard-carousel";
-import Categories from "../search/_components/categories";
 import { db } from "@/lib/db";
-import { getCoursesDashboard } from "@/actions/get-courses-dashboard";
+import {
+	getCoursesDashboard,
+	getCoursesDashboardTotal,
+} from "@/actions/get-courses-dashboard";
 import { Separator } from "@/components/ui/separator";
 import SearchInput from "@/components/search-input";
 import CoursesListDashboard from "@/components/courses-list-dashboard";
-import CourseCommentWithStartForm from "@/app/(course)/courses/[courseId]/chapters/[chapterId]/_components/course-comment-with-star-form";
+import { Suspense } from "react";
+import SkeletonDashboardCarousel from "@/components/SkeletonDashboardCarousel ";
+import Pagination from "@/components/pagination";
+import DashboardCarousel from "@/components/dashboard-carousel";
 interface SearchPageProps {
 	searchParams: {
-		title: string;
+		search: string;
 		categoryId: string;
+		rating: number;
+		category: string;
+		price: number;
+		page: number;
 	};
 }
-const Dashboard = async ({ searchParams }: SearchPageProps) => {
-	const { userId } = auth();
-	// let userId = "user_2c7WDRhRgaTXgF3G3JIaInZbQD4";
-	// const user = await currentUser();
-	console.log("searchParams =>", searchParams.categoryId);
 
-	const categories = await db.category.findMany({
-		orderBy: { name: "asc" },
+const Dashboard = async ({ searchParams }: SearchPageProps) => {
+	// const { userId } = auth();
+	let userId = "user_2c7WDRhRgaTXgF3G3JIaInZbQD4";
+	// const user = await currentUser();
+	const currentPage = Number(searchParams?.page) || 1;
+
+	const totalPages = await getCoursesDashboardTotal({
+		...searchParams,
 	});
+
 	const courseTotal = await db.course.count({
 		where: {
 			isPublished: true,
 		},
 	});
-	console.log(courseTotal);
 	const courses = await getCoursesDashboard({
 		...searchParams,
+		page: currentPage,
 	});
-	console.log(courses);
+
 	const { completedCourses, coursesInProgress } = await getDashboardCourses(
 		userId!
 	);
 
-	// const { completedCourses, coursesInProgress } = await getDashboardCourses(
-	// 	user?.id!
-	// );
-
 	return (
 		<>
-			<DashboardCarousel />
+			<Suspense
+				key={courseTotal + userId}
+				fallback={<SkeletonDashboardCarousel />}
+			>
+				<div className="pl-6">
+					<DashboardCarousel />
+				</div>
+			</Suspense>
 
 			{userId && (
 				<div>
@@ -90,12 +105,13 @@ const Dashboard = async ({ searchParams }: SearchPageProps) => {
 				<div className="p-6 md:mb-0 block">
 					<SearchInput />
 				</div>
-				<div className="space-y-7 p-6">
-					<Categories items={categories} />
-				</div>
+
 				<Separator />
+
 				<div className="space-y-7 p-6">
+					{/* the courses value is filtered form searchParams [title, categoryId] parameter */}
 					<CoursesListDashboard items={courses} />
+					<Pagination totalPages={totalPages} />
 				</div>
 			</div>
 		</>
