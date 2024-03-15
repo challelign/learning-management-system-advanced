@@ -1,8 +1,8 @@
 import { Category, Course } from "@prisma/client";
 
-import { getProgress } from "@/actions/get-progress";
 import { db } from "@/lib/db";
 import { getProgressDashboard } from "./get-progress-dashboard";
+const ITEMS_PER_PAGE = 2;
 
 type CourseWithProgressWithCategory = Course & {
 	category: Category | null;
@@ -14,25 +14,30 @@ type GetCourses = {
 	// userId: string;
 	search?: string;
 	categoryId?: string;
+	rating?: number;
+	category?: string;
+	price?: number;
+	page: number;
 };
 
 export const getCoursesDashboard = async ({
 	// userId,
 	search,
 	categoryId,
+	rating,
+	category,
+	price,
+	page,
 }: GetCourses): Promise<CourseWithProgressWithCategory[]> => {
 	try {
-		console.log("search", search);
+		console.log("[page]", page);
+		const offset = (page! - 1) * ITEMS_PER_PAGE;
+		// console.log("search", search);
+		const [minPrice, maxPrice] = price!?.split("-").map(Number) || [{}, {}];
+		// console.log(minPrice, maxPrice);
 		const courses = await db.course.findMany({
-			/* where: {
-				isPublished: true,
-			 
-				title: {
-					contains: title,
-				},
-				categoryId,
-			}, */
-
+			skip: offset,
+			take: 2,
 			where: {
 				OR: [
 					{
@@ -49,15 +54,39 @@ export const getCoursesDashboard = async ({
 						category: {
 							name: {
 								contains: search,
+								// in: category?.split(","),
 							},
 						},
 					},
 				],
+				...(category && {
+					category: {
+						name: {
+							// contains: search,
+							in: category?.split(","),
+						},
+					},
+				}),
+				...(price && {
+					price: {
+						gte: minPrice || 0, // Greater than or equal to min price
+						lte: maxPrice || Infinity, // Less than or equal to max price (or infinity)
+					},
+				}),
+				// this to select only this rating
+				/* 	...(rating && {
+					totalRating: Number(rating),
+				}), */
+
+				...(rating && {
+					totalRating: {
+						gte: Number(rating),
+					},
+				}),
 				isPublished: true,
 
 				categoryId,
 			},
-
 			include: {
 				category: true,
 
@@ -113,3 +142,70 @@ export const getCoursesDashboard = async ({
 		return [];
 	}
 };
+
+export async function getCoursesDashboardTotal({
+	search,
+	categoryId,
+	rating,
+	category,
+	price,
+}: GetCourses) {
+	try {
+		const [minPrice, maxPrice] = price!?.split("-").map(Number) || [{}, {}];
+		// console.log(minPrice, maxPrice);
+		const courses = await db.course.findMany({
+			where: {
+				OR: [
+					{
+						description: {
+							contains: search,
+						},
+					},
+					{
+						title: {
+							contains: search,
+						},
+					},
+					{
+						category: {
+							name: {
+								contains: search,
+							},
+						},
+					},
+				],
+				...(category && {
+					category: {
+						name: {
+							in: category?.split(","),
+						},
+					},
+				}),
+				...(price && {
+					price: {
+						gte: minPrice || 0, // Greater than or equal to min price
+						lte: maxPrice || Infinity, // Less than or equal to max price (or infinity)
+					},
+				}),
+				...(rating && {
+					totalRating: {
+						gte: Number(rating),
+					},
+				}),
+				isPublished: true,
+
+				categoryId,
+			},
+		});
+
+		console.log("courses=>", courses.length);
+		const totalPages = Math.ceil(Number(courses.length) / ITEMS_PER_PAGE);
+		console.log("totalPages =>", totalPages);
+
+		return totalPages;
+	} catch (error) {
+		console.log(error);
+		console.error("Database Error:", error);
+		throw new Error("Failed to fetch total number of courses.");
+	}
+}
