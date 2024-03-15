@@ -30,8 +30,8 @@ interface SearchPageProps {
 }
 
 const Dashboard = async ({ searchParams }: SearchPageProps) => {
-	// const { userId } = auth();
-	let userId = "user_2c7WDRhRgaTXgF3G3JIaInZbQD4";
+	const { userId } = auth();
+	// let userId = "user_2c7WDRhRgaTXgF3G3JIaInZbQD4";
 	// const user = await currentUser();
 	const currentPage = Number(searchParams?.page) || 1;
 

@@ -1,3 +1,5 @@
+<!--THIS IS THE FINAL PROJECT AND THE END OF LMS -->
+
 # Build an LMS Platform: Next.js 13, React, Stripe, Mux, Prisma, Tailwind, MySQL | Full Course 2023
 
 This is a repository for Build an LMS Platform: Next.js 14, React, Stripe, Mux, Prisma, Tailwind, MySQL (I Use Aiven for MySQL to deploy this project online live ) | Full Course 2023
@@ -102,3 +104,5 @@ Running commands with npm `npm run [command]`
 | command | description                              |
 | :------ | :--------------------------------------- |
 | `dev`   | Starts a development instance of the app |
+
+    let userId = "user_2c7WDRhRgaTXgF3G3JIaInZbQD4";

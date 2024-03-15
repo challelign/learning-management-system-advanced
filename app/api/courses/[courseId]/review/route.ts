@@ -7,8 +7,8 @@ export async function POST(
 	{ params }: { params: { courseId: string } }
 ) {
 	try {
-		// const { userId } = auth();
-		let userId = "user_2c7WDRhRgaTXgF3G3JIaInZbQD4";
+		const { userId } = auth();
+		// let userId = "user_2c7WDRhRgaTXgF3G3JIaInZbQD4";
 		const { rating, review } = await req.json();
 		console.log(rating);
 		console.log(review);
@@ -71,8 +71,8 @@ export async function PATCH(
 	{ params }: { params: { courseId: string } }
 ) {
 	try {
-		// let { userId } = auth();
-		let userId = "user_2c7WDRhRgaTXgF3G3JIaInZbQD4";
+		let { userId } = auth();
+		// let userId = "user_2c7WDRhRgaTXgF3G3JIaInZbQD4";
 		const values = await req.json();
 
 		const getCourseRatting = await db.courseRatting.findUnique({

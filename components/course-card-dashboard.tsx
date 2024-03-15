@@ -36,7 +36,7 @@ const CourseCardDashboard = async ({
 }: CourseCardProps) => {
 	// uncomment Created by
 	const user = await clerkClient.users.getUser(userId);
-	let userIdAuth = "user_2c7WDRhRgaTXgF3G3JIaInZbQD4";
+	// let userIdAuth = "user_2c7WDRhRgaTXgF3G3JIaInZbQD4";
 
 	// const { userId: userIdAuth } = auth();
 	return (
@@ -49,7 +49,7 @@ const CourseCardDashboard = async ({
 					<div className="text-lg md:text-base font-medium group-hover:text-sky-700 transition line-clamp-2">
 						{title}
 					</div>
-					{/* <p className="text-sm mb-4"> Created by {user.firstName}</p> */}
+					<p className="text-sm mb-4"> Created by {user.firstName}</p>
 					<p className="text-xs to-muted-foreground">{category}</p>
 					<div className="pt-3 text-sm text-sky-950  font-black flex justify-start items-center gap-x-3 content-center">
 						{totalReview}

@@ -1,3 +1,5 @@
+<!--THIS IS THE FINAL PROJECT AND THE END OF LMS -->
+
     "workbench.colorCustomizations": {
     	"tab.activeBackground": "#16467e6c",
     	"tab.activeBorderTop": "#F5DEB3"
