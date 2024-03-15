@@ -38,7 +38,7 @@ const CourseCardDashboard = async ({
 	const user = await clerkClient.users.getUser(userId);
 	// let userIdAuth = "user_2c7WDRhRgaTXgF3G3JIaInZbQD4";
 
-	// const { userId: userIdAuth } = auth();
+	const { userId: userIdAuth } = auth();
 	return (
 		<Link href={`/courses/${id}`}>
 			<div className="group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full relative">
